@@ -1,7 +1,5 @@
 #!/bin/sh
 
-devices=( $(ip link show | awk '{if ($1 ~ "[0-9]:") print substr($2, 1, length($2)-1) }') )
-
 # Give 1 argument to only change one device
 if [ ! -z "$1" ]; then
     echo "Changing MAC address of "$1
@@ -10,9 +8,13 @@ if [ ! -z "$1" ]; then
     exit 0
 fi
 
+devices=( $(ip link show | awk '{if ($1 ~ "[0-9]:") print substr($2, 1, length($2)-1) }') )
+
 for device in "${devices[@]}"
 do
-    echo "Changing MAC address of "$device
-    macchanger -r $device
-    echo ""
+    case $device in "e"*|"w"*)
+        echo "Changing MAC address of "$device
+        macchanger -r $device
+        echo ""
+    esac
 done
