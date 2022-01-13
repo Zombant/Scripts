@@ -12,9 +12,18 @@ devices=( $(ip link show | awk '{if ($1 ~ "[0-9]:") print substr($2, 1, length($
 
 for device in "${devices[@]}"
 do
-    case $device in "e"*|"w"*)
-        echo "Changing MAC address of "$device
-        macchanger -r $device
-        echo ""
+    case $device in 
+        "e"*)
+            echo "Changing MAC address of "$device
+            macchanger -r $device
+            echo ""
+            ;;
+        "w"*)
+            echo "Changing MAC address of "$device
+            nmcli radio wifi off
+            macchanger -r $device
+            nmcli radio wifi on
+            echo ""
+            ;;
     esac
 done
